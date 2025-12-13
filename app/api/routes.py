@@ -14,7 +14,12 @@ router = APIRouter()
 
 @router.get("/", tags=["Status"])
 async def status_check():
-    return {"status": "ok"}
+    return {
+        "title": "Appscrip Assignment",
+        "status": "server is running",
+        "assignment": "completed",
+        "auth": "please hit /auth/guest to get the token",
+    }
 
 
 @router.post("/auth/guest", tags=["Auth"])
@@ -24,16 +29,6 @@ async def create_guest_session():
     return {
         "token": session.token,
         "token_type": "Bearer",
-    }
-
-
-@router.get("/protected-test", tags=["Auth"])
-async def protected_test(session=Depends(get_current_session)):
-    return {
-        "message": "Authenticated",
-        "token": session.token,
-        "created_at": session.created_at,
-        "last_used_at": session.last_used_at,
     }
 
 

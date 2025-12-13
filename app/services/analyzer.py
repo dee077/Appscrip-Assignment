@@ -63,18 +63,16 @@ def render_markdown(
 ) -> str:
     """Final Markdown renderer. Enforces metadata and data source listing."""
 
-    sources = sorted({item.source for item in items})
-
     return f"""# Market Analysis — {sector.title()}
 
-    **Generated at:** {now_ist().isoformat()}
+**Generated at:** {now_ist().isoformat()}
 
-    {analysis}
+{analysis}
 
-    ## Data Sources
-    """ + "\n".join(
-            f"- {source}" for source in sources
-        )
+## Data Sources
+""" + "\n".join(
+        f"- [{item.title}]({item.url})" for item in items
+    )
 
 
 def fallback_no_data_report(sector: str) -> str:
@@ -82,24 +80,24 @@ def fallback_no_data_report(sector: str) -> str:
 
     return f"""# Market Analysis — {sector.title()}
 
-    **Generated at:** {now_ist().isoformat()}
+**Generated at:** {now_ist().isoformat()}
 
-    ## Market Summary
-    No reliable recent market data was found for the Indian {sector} sector.
+## Market Summary
+No reliable recent market data was found for the Indian {sector} sector.
 
-    ## Key Developments
-    No verified developments could be identified at this time.
+## Key Developments
+No verified developments could be identified at this time.
 
-    ## Trade Opportunities
-    Trade opportunities cannot be evaluated without current market signals.
+## Trade Opportunities
+Trade opportunities cannot be evaluated without current market signals.
 
-    ## Risks
-    - Acting without up-to-date information
-    - Incomplete market visibility
+## Risks
+- Acting without up-to-date information
+- Incomplete market visibility
 
-    ## Data Sources
-    - DuckDuckGo News
-    """
+## Data Sources
+- DuckDuckGo News
+"""
 
 
 def fallback_llm_error_report(
@@ -111,25 +109,27 @@ def fallback_llm_error_report(
     return (
         f"""# Market Analysis — {sector.title()}
 
-    **Generated at:** {now_ist().isoformat()}
+**Generated at:** {now_ist().isoformat()}
 
-    ## Market Summary
-    Automated AI analysis is temporarily unavailable.
-    Below are the raw market signals collected.
+## Market Summary
+Automated AI analysis is temporarily unavailable.
+Below are the raw market signals collected.
 
-    ## Market Signals
-    """
-            + "\n".join(f"- {item.title}" for item in items)
-            + """
+## Market Signals
+"""
+    + "\n".join(f"- {item.title}" for item in items)
+    + """
 
-    ## Trade Opportunities
-    Manual interpretation required due to AI unavailability.
+## Trade Opportunities
+Manual interpretation required due to AI unavailability.
 
-    ## Risks
-    - Reduced analytical depth
-    - Potential missed correlations
+## Risks
+- Reduced analytical depth
+- Potential missed correlations
 
-    ## Data Sources
-    """
-            + "\n".join(f"- {item.source}" for item in sorted({i.source for i in items}))
+## Data Sources
+"""
+        + "\n".join(
+            f"- [{item.title}]({item.url})" for item in items
         )
+    )
